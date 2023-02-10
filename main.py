@@ -1,5 +1,5 @@
 from fastapi import Body, FastAPI, HTTPException
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 app = FastAPI()
 
@@ -21,3 +21,16 @@ def create_post(payload: dict = Body()):
     return {
         "data": new_post
     }
+
+@app.delete('/posts/{post_id}', status_code=204)
+def create_posts(post_id: str):
+    print("POST ID: ", post_id)
+    post_found = None
+    for post in posts:
+        print(post)
+        if post["id"] == UUID(post_id):
+            post_found = post
+            break
+    if not post_found:
+        raise HTTPException(status_code=404, detail="Item not found")
+    posts.remove(post_found)
