@@ -23,8 +23,7 @@ def create_post(payload: dict = Body()):
     }
 
 @app.delete('/posts/{post_id}', status_code=204)
-def create_posts(post_id: str):
-    print("POST ID: ", post_id)
+def delete_post(post_id: str):
     post_found = None
     for post in posts:
         print(post)
@@ -34,3 +33,18 @@ def create_posts(post_id: str):
     if not post_found:
         raise HTTPException(status_code=404, detail="Item not found")
     posts.remove(post_found)
+
+@app.patch('/posts/{post_id}', status_code=204)
+def update_post(post_id: str, post_data: dict = Body()):
+    post_found = None
+    post_index = -1
+    for index, post in enumerate(posts):
+        print(post)
+        if post["id"] == UUID(post_id):
+            post_found = post
+            post_index = index
+            break
+    if not post_found:
+        raise HTTPException(status_code=404, detail="Item not found")
+    post_found["name"] = post_data
+    posts[post_index] = post_found

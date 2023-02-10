@@ -31,4 +31,17 @@ def test_delete_post():
     post_id = post["id"]
     response = client.delete(f'/posts/{post_id}')
     assert response.status_code == 204
+
+def test_update_post():
+    # create the post
+    payload = { "name": "juice" }
+    response = client.post('/posts', json=payload)
+    json_data = response.json()
+    post = json_data["data"]
+
+    # update post
+    post_id = post["id"]
+    new_post_data = { "name": "banana" }
+    response = client.patch(f'/posts/{post_id}', json=new_post_data)
+    assert response.status_code == 204
     
