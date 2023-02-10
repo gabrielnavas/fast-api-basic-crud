@@ -1,21 +1,23 @@
-from fastapi import FastAPI
+from fastapi import Body, FastAPI, HTTPException
+from uuid import uuid4
 
 app = FastAPI()
 
-@app.get('/')
-def root():
-    return {
-        "Hello": "World"
-    }
+posts = [{ "id": uuid4(), "name": "apple" }]
 
 @app.get('/posts')
 def get_posts():
     return {
-        "data": { "id": "123", "name": "apple" }
+        "data": posts
     }
 
-@app.post('/posts')
-def create_posts():
+@app.post('/posts', status_code=201)
+def create_post(payload: dict = Body()):
+    new_post = {
+        "id": uuid4(),
+        "name": payload["name"]
+    }
+    posts.append(new_post)
     return {
-        "data": { "id": "123", "name": "apple" }
+        "data": new_post
     }
